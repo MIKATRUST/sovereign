@@ -29,8 +29,8 @@ def base6_to_base2(numbers):
 
 class View:
     def __init__(self):
-        pass
-        print("CONSTRUCTOR VIEW")
+        if __debug__:
+            print("View constructor")
 
     def clear(self):
         # for windows

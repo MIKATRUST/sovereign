@@ -6,13 +6,11 @@ import hashlib
 import binascii
 from prettytable import PrettyTable
 
-# Model
-
 class Model:
     def __init__(self):
-        print("CONSTRUCTOR MODEL")
-        print(os.getcwd())
-        print("yep")
+        if __debug__:
+            print("Model constructor Dir:" + str(os.getcwd()))
+        
         self.bip39_sentances = []
         self.mode = int(24)
         # Initialize a list to store the BIP39 words

@@ -4,6 +4,7 @@ import hashlib
 import binascii
 from prettytable import PrettyTable
 
+
 from sovereign.model.model import Model
 from sovereign.view.view import View
 
@@ -80,7 +81,8 @@ def bip39_sentances_xor(bip39_sentances, wordlist, nums):
 
 class Controller:
     def __init__(self):
-        print("CONSTRUCTOR CONTROLLER")
+        if __debug__:
+            print("Controller constructor ")
         check_system_compatibility()
         self.model = Model()
         self.view = View()
