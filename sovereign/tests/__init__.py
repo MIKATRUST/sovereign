@@ -1,12 +1,4 @@
-#import unittest
-
-#import sys
-#sys.path.append('../')
-
-#from model.model import Model
-
-#import sys
-#sys.path.append('../')
+'''Demonstrates triple double quotes
+docstrings and does nothing really.'''
 
 __all__ = ["tests"]
-

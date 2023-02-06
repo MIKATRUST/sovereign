@@ -1,3 +1,6 @@
+#all:
+#	TBD
+
 init:
 	pip3 install -r requirements.txt
 
@@ -8,7 +11,8 @@ run_debug:
 	python3 -m sovereign
 
 lint:
-	python3 -m pylint ./sovereign
+	python3 -m autopep8 --in-place --aggressive --aggressive sovereign/model/model.py
+	python3 -m pylint sovereign
 
 test:
 	coverage run --omit="sovereign/tests/*" -m unittest discover

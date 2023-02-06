@@ -1,16 +1,21 @@
 
-from os import system, name
+'''Demonstrates triple double quotes
+docstrings and does nothing really.'''
+
 import os
 import sys
-import hashlib
-import binascii
-from prettytable import PrettyTable
+
 
 class Model:
+
+    '''Demonstrates triple double quotes
+    docstrings and does nothing really.'''
+
     def __init__(self):
+        """Function printing python version."""
         if __debug__:
             print("Model constructor Dir:" + str(os.getcwd()))
-        
+
         self.bip39_sentances = []
         self.mode = int(24)
         # Initialize a list to store the BIP39 words
@@ -18,40 +23,150 @@ class Model:
         # Initialize a dictionary to store the word-to-number mapping
         self.nums = {}
         # Load word list
-        with open('./sovereign/model/english.txt') as fin:
+        file_path = './sovereign/model/english.txt'
+        # with open(file_path) as fin:
+        with open(file_path, encoding="utf-8") as fin:
             i = 0
             for word in fin:
                 self.nums[word.strip()] = i
                 self.wordlist.append(word.strip())
                 i = i + 1
-        if(len(self.wordlist) != 2048): 
-            sys.exit('\nError. '+ str(len(self.wordlist)) +' words loaded, should have been 2048. Exited from the script.\n')
+        if len(self.wordlist) != 2048:
+            sys.exit('\nError. ' + str(len(self.wordlist)) +
+                     ' words loaded, should have been 2048. Exited from the script.\n')
 
     def add_bip39_sentance(self, sentance):
+        """Function printing python version."""
         print(len(self.bip39_sentances))
         self.bip39_sentances.append(sentance)
         print(self.bip39_sentances)
-    
+
     def get_bip39_sentances(self):
+        """Function printing python version."""
         return self.bip39_sentances
 
     def load_3_12w_bip39_sentances(self):
+        """Function printing python version."""
         self.mode = int(12)
-        self.bip39_sentances.append(['zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','wrong'])
-        self.bip39_sentances.append(['zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','abstract'])
-        self.bip39_sentances.append(['abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'surface'])
+        self.bip39_sentances.append(['zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'wrong'])
+        self.bip39_sentances.append(['zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'abstract'])
+        self.bip39_sentances.append(['abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'surface'])
         print("loaded load_3_12w_bip39_sentances")
-    
+
     def load_3_24w_bip39_sentances(self):
+        """Function printing python version."""
         self.mode = int(24)
-        self.bip39_sentances.append(['zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','vote'])
-        self.bip39_sentances.append(['zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo','zoo', 'vote'])
-        self.bip39_sentances.append(['abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon', 'abandon','abandon','street'])
+        self.bip39_sentances.append(['zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'vote'])
+        self.bip39_sentances.append(['zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'zoo',
+                                     'vote'])
+        self.bip39_sentances.append(['abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'abandon',
+                                     'street'])
         print("loaded load_3_24w_bip39_sentances")
 
     def set_mode(self, mode):
+        """Function printing python version."""
         self.mode = int(mode)
 
     def get_mode(self):
+        """Function printing python version."""
         return int(self.mode)
-
