@@ -115,6 +115,7 @@ class Controller:
 
     def option0(self):
         """Change mode 12 or 24 BIP39 sentance."""
+        self.view.clear()
         if self.model.get_mode() == int(24):
             self.model.set_mode(int(12))
         else:
