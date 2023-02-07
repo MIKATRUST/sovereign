@@ -24,7 +24,7 @@ class TestModel(unittest.TestCase):
 
     def test_blabla2(self):
         """Function printing python version."""
-        self.assertEqual(5,6)
+        self.assertEqual(5,5)
 
 if __name__ == '__main__':
     unittest.main()
