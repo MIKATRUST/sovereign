@@ -1,5 +1,5 @@
 # sovereign
-In the era of 'don't trust, verify,' digital wallets will become a cornerstone of society.
+In the era of information age, digital wallets will become a cornerstone of society.
 
 ## What is sovereign?
 * Sovereign is a Python-based software that generates BIP39 sentences through coin flipping, dice rolling, or random selection of BIP39 words.
