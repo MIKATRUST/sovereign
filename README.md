@@ -8,7 +8,7 @@ In the era of 'don't trust, verify,' digital wallets will become a cornerstone o
 ## Disclaimer
 Please keep in mind:
 * Sovereign is still in its infancy and should not be used as it carries significant risk to the user. Proceed with caution and at your own discretion.
-
+* If you are not a developper you must not use it
 
 ## Thanks to 
 *  https://venthur.de/2021-03-31-python-makefiles.html
