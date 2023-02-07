@@ -7,6 +7,7 @@ from sovereign.model.model import Model
 '''Demonstrates triple double quotes
 docstrings and does nothing really.'''
 
+
 class TestModel(unittest.TestCase):
 
     def test_set_mode(self):
@@ -20,11 +21,12 @@ class TestModel(unittest.TestCase):
 
     def test_blabla(self):
         """Function printing python version."""
-        self.assertEqual(5,5)
+        self.assertEqual(5, 5)
 
     def test_blabla2(self):
         """Function printing python version."""
-        self.assertEqual(5,5)
+        self.assertEqual(5, 5)
+
 
 if __name__ == '__main__':
     unittest.main()

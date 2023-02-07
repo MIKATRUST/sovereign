@@ -4,6 +4,7 @@
 from os import system, name
 from prettytable import PrettyTable
 
+
 def base_m_to_int(numbers, base_m):
     """Function printing python version."""
     return int(''.join([str(n) for n in numbers]), base_m)
@@ -21,6 +22,7 @@ def base_m_to_int(numbers, base_m):
 #        print(ve)
 #        return False
 
+
 def base6_to_base2(numbers):
     """Function printing python version."""
     base2_numbers = []
@@ -28,6 +30,7 @@ def base6_to_base2(numbers):
         binary_number = format(int(number), '05b')
         base2_numbers.append(binary_number)
     return base2_numbers
+
 
 class View:
 
@@ -122,7 +125,6 @@ class View:
             print(f"Error: {e}")
 
     def gather_bip39_word_input(self, nums) -> str:
-
         """Function printing python version."""
         print("!!!! within gather_bip39_word_input")
         try:

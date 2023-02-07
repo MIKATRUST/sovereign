@@ -19,6 +19,10 @@ $(VENV): requirements.txt requirements-dev.txt #setup.py
 #	$(BIN)/pip install -e .
 	touch $(VENV)
 
+.PHONY: format
+format: $(VENV)
+	$(BIN)/autopep8 $(DIR) --recursive --in-place --pep8-passes 2000 --verbose
+
 .PHONY: lint
 lint: $(VENV)
 	$(BIN)/pylint $(DIR)

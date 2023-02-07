@@ -8,6 +8,7 @@ import binascii
 from sovereign.model.model import Model
 from sovereign.view.view import View
 
+
 def check_system_compatibility():
     """Function printing python version."""
     # Exit if the version of Python is not Python3
@@ -17,7 +18,7 @@ def check_system_compatibility():
                  ': This script uses 264 bit integers and requires Python 3. Integers in Python 3 are of unlimited size. Exited from the script.\n')
     # Exit if your machine is not little endian
     if sys.byteorder != 'little':
-        sys.exit('\nError. This machine is ' + str(sys.byteorder) + \
+        sys.exit('\nError. This machine is ' + str(sys.byteorder) +
                  ' endian. This software has only been tested on little endian machine.\n')
 
 
@@ -51,11 +52,12 @@ def is_valid_bip39_sentence(bip39_sentance, nums, wordlist, hash_method=hashlib.
     else:
         raise ValueError("Invalid number of words")
 
+
 def fix_bip39_checksum(words, nums, wordlist):
     """Function printing python version."""
     cand = []
     if len(words) == 24 or len(words) == 12:
-        #org_words = words
+        # org_words = words
         for i in range(2048):
             cand = words[:-1] + [wordlist[i]]
             if is_valid_bip39_sentence(cand, nums, wordlist):
@@ -68,6 +70,7 @@ def fix_bip39_checksum(words, nums, wordlist):
 #
 # !! before combining, we should check the checksum for each entance and trigger exception if needed
 #
+
 
 def bip39_sentances_xor(bip39_sentances, wordlist, nums):
     """Function printing python version."""
@@ -95,6 +98,7 @@ def bip39_sentances_xor(bip39_sentances, wordlist, nums):
 class Controller:
     '''Demonstrates triple double quotes
     docstrings and does nothing really.'''
+
     def __init__(self):
         """Function printing python version."""
         if __debug__:

@@ -4,6 +4,7 @@ docstrings and does nothing really.'''
 
 from sovereign.controller.controller import Controller
 
+
 def run():
     '''Demonstrates triple double quotes
     docstrings and does nothing really.'''
