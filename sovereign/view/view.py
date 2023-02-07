@@ -1,6 +1,5 @@
 
-'''Demonstrates triple double quotes
-docstrings and does nothing really.'''
+'''MVC/View'''
 
 from os import system, name
 from prettytable import PrettyTable

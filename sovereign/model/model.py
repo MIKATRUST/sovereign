@@ -1,6 +1,5 @@
 
-'''Demonstrates triple double quotes
-docstrings and does nothing really.'''
+'''MVC/Model'''
 
 import os
 import sys

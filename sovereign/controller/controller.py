@@ -1,18 +1,12 @@
 
-'''Demonstrates triple double quotes
-docstrings and does nothing really.'''
+'''MVC/Controller'''
 
-# from os import system, name
 import sys
 import hashlib
 import binascii
-# from prettytable import PrettyTable
-
 
 from sovereign.model.model import Model
 from sovereign.view.view import View
-
-# Controller
 
 def check_system_compatibility():
     """Function printing python version."""
