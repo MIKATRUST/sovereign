@@ -8,7 +8,6 @@ import binascii
 from sovereign.model.model import Model
 from sovereign.view.view import View
 
-
 def check_system_compatibility():
     """Function printing python version."""
     # Exit if the version of Python is not Python3
@@ -21,19 +20,16 @@ def check_system_compatibility():
         sys.exit('\nError. This machine is ' + str(sys.byteorder) +
                  ' endian. This software has only been tested on little endian machine.\n')
 
-
 def binary_words_to_bip39_words(binary_words, wordlist):
     """Function printing python version."""
     return [wordlist[int(binary_word, 2)] for binary_word in binary_words]
     # return [str(int(binary_word, 2)) for binary_word in binary_words]
-
 
 def senary_words_to_bip39_words(senary_words, wordlist):
     """Function printing python version."""
     return [wordlist[(int(senary_word, 6) & 0x07ff)]
             for senary_word in senary_words]
     # To check, the conversion is the same than %2048
-
 
 def is_valid_bip39_sentence(bip39_sentance, nums, wordlist, hash_method=hashlib.sha256):
     """Function printing python version."""
@@ -52,7 +48,6 @@ def is_valid_bip39_sentence(bip39_sentance, nums, wordlist, hash_method=hashlib.
     else:
         raise ValueError("Invalid number of words")
 
-
 def fix_bip39_checksum(words, nums, wordlist):
     """Function printing python version."""
     cand = []
@@ -70,7 +65,6 @@ def fix_bip39_checksum(words, nums, wordlist):
 #
 # !! before combining, we should check the checksum for each entance and trigger exception if needed
 #
-
 
 def bip39_sentances_xor(bip39_sentances, wordlist, nums):
     """Function printing python version."""
@@ -93,7 +87,6 @@ def bip39_sentances_xor(bip39_sentances, wordlist, nums):
         if is_valid_bip39_sentence(cand, nums, wordlist):
             print("xor result BIP39 sentance is valid")
             return cand
-
 
 class Controller:
     '''Demonstrates triple double quotes
