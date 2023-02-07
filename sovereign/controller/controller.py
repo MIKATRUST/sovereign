@@ -114,14 +114,14 @@ class Controller:
         }
 
     def option0(self):
-        """Function printing python version."""
+        """Change mode 12 or 24 BIP39 sentance."""
         if self.model.get_mode() == int(24):
             self.model.set_mode(int(12))
         else:
             self.model.set_mode(int(24))
 
     def option1(self):
-        """Function printing python version."""
+        """Create BIP39 sentance from flipping a coin."""
         self.view.clear()
         print("You selected Option 1")
 
@@ -150,7 +150,7 @@ class Controller:
         self.view.display_bip39_sentance(valid_bip39_sentance, self.model.nums)
 
     def option2(self):
-        """Function printing python version."""
+        """CCreate BIP39 sentance from rolling a dice."""
         print("You selected Option 2")
         words = []
         base = 6
@@ -176,7 +176,7 @@ class Controller:
         self.view.display_bip39_sentance(valid_bip39_sentance, self.model.nums)
 
     def option3(self):
-        """Function printing python version."""
+        """Create BIP39 sentance from BIP39 word random selection."""
         print("You selected Option 3")
         words = []
         group_count = self.model.get_mode()  # 12 or 24
@@ -208,7 +208,7 @@ class Controller:
                 valide_bip39_sentance, self.model.nums)
 
     def option4(self):
-        """Function printing python version."""
+        """Load a BIP39 sentance."""
         print("You selected Option 4")
         words = []
         group_count = self.model.get_mode()  # 12 or 24
@@ -237,7 +237,7 @@ class Controller:
             print("The entered BIP39 is not valid")
 
     def option5(self):
-        """Function printing python version."""
+        """Show loaded BIP39 sentance(s)"""
         print("You selected Option 5")
         sentances = self.model.get_bip39_sentances()
         print("Number of BIP39 sentances: " + str(len(sentances)))
@@ -246,7 +246,7 @@ class Controller:
                 sentance, self.model.nums, "BIP39 sentance #" + str(count + 1))
 
     def option6(self):
-        """Function printing python version."""
+        """Compute xor of loaded BIP39 sentances."""
         print("You selected Option 6")
         #!!! before, we need to check that there are at least 2 BIP39_entances
         bip39_sentance = bip39_sentances_xor(
@@ -258,17 +258,18 @@ class Controller:
             bip39_sentance, self.model.nums, "BIP39 XORED sentance")
 
     def option20(self):
-        """Function printing python version."""
+        """Load 3 12 words BIP39 sentances."""
         print("You selected Option 20")
         # self.bip39Sentances
         self.model.load_3_12w_bip39_sentances()
 
     def option21(self):
-        """Function printing python version."""
+        """Load 3 24 words BIP39 sentances.."""
         print("You selected Option 21")
         self.model.load_3_24w_bip39_sentances()
 
     def exit_program(self):
-        """Function printing python version."""
-        self.view.clear()
+        """Quit."""
+        quit()        
         sys.exit("Exiting...")
+
