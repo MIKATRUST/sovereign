@@ -4,7 +4,6 @@
 from os import system, name
 from prettytable import PrettyTable
 
-
 def base_m_to_int(numbers, base_m):
     """Function printing python version."""
     return int(''.join([str(n) for n in numbers]), base_m)
@@ -21,7 +20,6 @@ def base_m_to_int(numbers, base_m):
 #    except ValueError as ve:
 #        print(ve)
 #        return False
-
 
 def base6_to_base2(numbers):
     """Function printing python version."""
@@ -160,7 +158,7 @@ class View:
         print("Menu:")
         print("Mode is " + str(mode) + " words BIP39 sentance")
         print("   0. Toggle mode")
-        print("Create and fix BIP39 sentance")
+        print("Physical entropy generation, create and fix BIP39 sentance")
         print("   1. Create BIP39 sentance from flipping a coin")
         print("   2. Create BIP39 sentance from rolling a dice")
         print("   3. Create BIP39 sentance from random selection of BIP39 words, fix checksum")
@@ -169,10 +167,11 @@ class View:
         print("   5. Show loaded BIP39 sentance(s)")
         print("   6. Combine loaded BIP39 sentances (XOR)")
         print("Hierarchical Deterministic (HD) wallets")
-        print("     TBD")
+        print("   7. Load password (optional) [tbd]")
+        print("   8. Compute seed [tbd]")
         print("Other")
         print("   7. Exit")
-        print("   8. Print BIP39 words")
+        print("   8. Print BIP39 words [tbd]")
         print("Tests")
         print("   20. Load 3 BIP39 12 words sentances")
         print("   21. Load 3 BIP39 24 words sentances")

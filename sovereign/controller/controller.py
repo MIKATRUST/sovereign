@@ -5,6 +5,11 @@ import sys
 import hashlib
 import binascii
 
+#For pbkdf2
+#import hashlib
+import hmac
+import os # unused ?
+
 from sovereign.model.model import Model
 from sovereign.view.view import View
 
@@ -87,6 +92,51 @@ def bip39_sentances_xor(bip39_sentances, wordlist, nums):
         if is_valid_bip39_sentence(cand, nums, wordlist):
             print("xor result BIP39 sentance is valid")
             return cand
+
+
+# Mnemonic to Seed
+# test vector, see : https://bitcoin.stackexchange.com/questions/85293/how-to-use-bip39-test-vectors
+def pbkdf2(password, salt, iterations, dklen, digest):
+    """Implements the PBKDF2 key derivation function.
+
+    Args:
+        password (bytes): The password to derive the key from.
+        salt (bytes): The salt to use in the key derivation.
+        iterations (int): The number of iterations to perform.
+        dklen (int): The length of the derived key in bytes.
+        digest (callable): The hash function to use, e.g. hashlib.sha256.
+
+    Returns:
+        bytes: The derived key.
+    """
+    if dklen > (2**32 - 1) * digest().block_size:
+        raise ValueError("Requested key length too long")
+
+    password = password.encode("utf-8")
+    salt = salt.encode("utf-8")
+    
+    h = hmac.new(password, None, digest)
+
+    def xor(a, b):
+        return bytes(x ^ y for x, y in zip(a, b))
+
+    def prf(h, data):
+        hm = h.copy()
+        hm.update(data)
+        return hm.digest()
+
+    dkey = b''
+    block = 0
+    while len(dkey) < dklen:
+        block += 1
+        U = prf(h, salt + block.to_bytes(4, "big"))
+        T = U
+        for _ in range(iterations - 1):
+            U = prf(h, U)
+            T = xor(T, U)
+        dkey += T
+    return dkey[:dklen]
+
 
 class Controller:
     '''Demonstrates triple double quotes

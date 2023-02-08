@@ -2,7 +2,7 @@
 docstrings and does nothing really.'''
 
 import unittest
-from sovereign.model.model import Model
+from ..model.model import Model
 
 '''Demonstrates triple double quotes
 docstrings and does nothing really.'''
