@@ -141,6 +141,11 @@ class TestBip39(unittest.TestCase):
         bip39 = Bip39()
         fun = bip39.binary_words_to_bip39_words
 
+        # 00000000000 = 0 base 10.
+        # 11111111111 = 2047 base 10.
+        # 00000000001 = 1 base 10. 
+        # 11111111110 = 2046 base 10.
+
         bin_words = '00000000000111111111110000000000111111111110'
         expected_res = 'abandon zoo ability zone'
         self.assertEqual(fun(bin_words), expected_res)
@@ -150,8 +155,11 @@ class TestBip39(unittest.TestCase):
         bip39 = Bip39()
         fun = bip39.dice_words_to_bip39_words
 
+        # 444444 base 4 = 0 base 10.
+        # 333333 base 4 = 2047 base 10.
         # 222222 base 4 = 2730 base 10. 2730 % 2048 = 682
-        # 111111 base 4 = 1365 base 10. 
+        # 111111 base 4 = 1365 base 10.
+
         dice_words = '444444333333222222111111'
         expected_res = 'abandon zoo fetch primary'
         self.assertEqual(fun(dice_words), expected_res)
