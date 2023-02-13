@@ -5,42 +5,55 @@
 import hashlib
 
 class Bip39():
-    """BIP39 implementation
-       English only 
+    """Implementation of the BIP39 standard for mnemonic phrases. Supports English only.
+       This class implements BIP39 checksum verification and correction.
 
     Attributes:
-        supported_bip39_length (int): supported BIP39 word length.
-        wordlist (list): List of words from the BIP39 wordlist.
-        nums (dict): Dictionary mapping words to numbers.
+        SUPPORTED_PHRASE_LENGTHS (list of int): Supported lengths for BIP39 phrases in words.
+        word_list (list of str): List of words from the BIP39 wordlist.
+        word_index (dict): Dictionary mapping words to their index in the wordlist.
     """
 
-    def __init__(self, file_path = './sovereign/model/english.txt'):
-        """Initialize the model.
-        Loads the BIP39 wordlist from the english.txt file and sets up the wordlist and nums attributes.
+    def __init__(self, wordlist_file = './sovereign/model/english.txt'):
+        """Initialize the BIP39 class.
+
+        Loads the BIP39 wordlist from the specified file and sets up the `word_list` and `word_index` attributes.
+
+        Args:
+            wordlist_file (str, optional): Path to the file containing the BIP39 wordlist. Defaults to './sovereign/model/english.txt'.
         """
         if __debug__:
             print("Bip39 constructor ")
 
-        self.supported_bip39_length = [12, 15, 18, 21, 24]
-        self.wordlist = []
-        self.nums = {}
+        self.wordlist = self._load_wordlist(wordlist_file)
+        self.word_to_index = {word: index for index, word in enumerate(self.wordlist)}
+        self.SUPPORTED_PHRASE_LENGTHS = [12, 15, 18, 21, 24]
 
-        expected_hash = '2f5eed53a4727b4bf8880d8f3f199efc90e58503646d9ff8eff3a2ed3b24dbda'
+    @staticmethod
+    def _load_wordlist(file_path):
+        with open(file_path, encoding="utf-8") as f:
+            return [word.strip() for word in f]
 
-        # check_file_hash(file_path, expected_hash)
+    def get_bip39_word(self, int_value):
+        """Get the BIP39 word from the integer value."""
+        return self.wordlist[int_value]
 
-        with open(file_path, encoding="utf-8") as fin:
-            for i, word in enumerate(fin):
-                self.nums[word.strip()] = i
-                self.wordlist.append(word.strip())
+    def get_bip39_word_value(self, word):
+        """Get the integer value for the given BIP39 word."""
+        return self.word_to_index[word]
 
-        if len(self.wordlist) != 2048:
-            raise ValueError(
-                f"Error: {len(self.wordlist)} The dictionary file does not contain 2048 words.")
+    def get_supported_bip39_length(self):
+        """Get the supported modes, i.e BIP39 supoported word length for this module."""
+        return self.SUPPORTED_PHRASE_LENGTHS
 
-    #    if not check_file_hash(file_path, expected_hash):
-    #        raise ValueError(
-    #            f"Error: The signature hash for the dictionary file is incorrect, not as expected: {expected_hash}")
+    def is_valid_bip39_words(self, sentance):
+        """Check if all words of a BIP39 sequence are valid."""
+        return not any(word not in self.word_to_index for word in sentance.split())
+    
+    def has_valid_bip39_length(self, mnemonic: str) -> bool:
+        """Check if a BIP mnemonic has a valid length."""
+        words = mnemonic.split()
+        return len(words) in self.SUPPORTED_PHRASE_LENGTHS
     
     def binary_words_to_bip39_words(self, words):
         """Convert a binary sequence of words into a BIP39 sentance."""
@@ -63,15 +76,6 @@ class Bip39():
             #pdb.set_trace()
         return sentance[:-1]
 
-    def is_valid_bip39_words(self, sentance):
-        """Check if all words of a BIP39 sequence are valid."""
-        return not any(word not in self.nums for word in sentance.split())
-
-    def is_valid_bip39_length(self, sentance):
-        """Check if a BIP sentance has valid length."""
-        if len(sentance.split()) in self.supported_bip39_length: return True
-        else: return False
-
     def is_valid_bip39_sentence(self, bip39_sentance, hash_method=hashlib.sha256):
         """Return true if the BIP39 sentance is valid,i.e. the checksum is valid."""
         
@@ -85,7 +89,7 @@ class Bip39():
         #Compute BIP39 sentance integer value
         int_sentance = int(0)
         for word in bip39_sentance.split():
-            int_sentance = (int_sentance << 11) + self.nums[word]
+            int_sentance = (int_sentance << 11) + self.word_to_index[word]
         
         #Compute BIP39 sentance binary value
         bin_sentance = bin(int_sentance)[2:].zfill(11 * word_count)
@@ -112,7 +116,7 @@ class Bip39():
         #Compute BIP39 sentance integer value
         int_sentance = int(0)
         for word in bip39_sentance.split():
-            int_sentance = (int_sentance << 11) + self.nums[word]
+            int_sentance = (int_sentance << 11) + self.word_to_index[word]
         
         #Compute BIP39 sentance binary value
         bin_sentance = bin(int_sentance)[2:].zfill(11 * word_count)
@@ -138,18 +142,6 @@ class Bip39():
         bip39_sentance_except_last_word = bip39_sentance.split()[:len(bip39_sentance.split())-1]
         #return fixed bip39_sentance
         return (" ".join(bip39_sentance_except_last_word) + " " + last_word)
-
-    def get_bip39_word(self, int_value):
-        """Get the BIP39 word from the integer value."""
-        return self.wordlist[int_value]
-
-    def get_bip39_word_value(self, word):
-        """Get the integer value for the given BIP39 word."""
-        return self.nums[word]
-
-    def get_supported_bip39_length(self):
-        """Get the supported modes, i.e BIP39 supoported word length for this module."""
-        return self.supported_bip39_length
 
 #if __name__ == '__main__':
 #    bip39 = Bip39()
