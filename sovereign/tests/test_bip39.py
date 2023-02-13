@@ -123,5 +123,21 @@ class TestBip39(unittest.TestCase):
         target.extend([12, 15, 18, 21, 24])
         self.assertListEqual(bip39.get_supported_bip39_length(), target)
 
+    def test_binary_words_to_bip39_words(self):
+        """Function printing python version."""
+        bip39 = Bip39()
+        bin_words = '00000000000111111111110000000000111111111110'
+        expected_res = 'abandon zoo ability zone'
+        self.assertEqual(bip39.binary_words_to_bip39_words(bin_words), expected_res)
+
+    def test_dice_words_to_bip39_words(self):
+        """Function printing python version."""
+        bip39 = Bip39()
+        # 222222 base 4 = 2730 base 10. 2730 % 2048 = 682
+        # 111111 base 4 = 1365 base 10. 
+        dice_words = '444444333333222222111111'
+        expected_res = 'abandon zoo fetch primary'
+        self.assertEqual(bip39.dice_words_to_bip39_words(dice_words), expected_res)
+
 if __name__ == '__main__':
     unittest.main()
