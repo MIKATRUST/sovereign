@@ -1,9 +1,20 @@
 # sovereign
 In the era of the information age, digital wallets will play a crucial role in society.
 
-## What is sovereign?
-* Sovereign is a Python-based software that generates BIP39 sentences through coin flipping, dice rolling, or random selection of BIP39 words.
+## About sovereign?
+* Sovereign is a Python-based software that generates BIP39 sentences through coin flipping, dice rolling, or manual random selection of BIP39 words.
 * Sovereign is not (yet) a digital wallet
+
+
+## Run
+```
+make run
+```
+
+## Test
+```
+make test
+```
 
 ## Disclaimer
 Please keep in mind:
@@ -15,3 +26,5 @@ Please keep in mind:
 *  https://www.geeksforgeeks.org/what-is-setup-py-in-python/
 *  https://learnmeabitcoin.com/technical/mnemonic
 *  https://iancoleman.io/bip39/
+
+
