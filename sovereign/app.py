@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 
 '''Demonstrates triple double quotes
 docstrings and does nothing really.'''
@@ -13,7 +15,7 @@ def run():
     controller.view.clear()
 
     while True:
-        controller.view.display_menu(int(controller.model.get_mode()))
+        controller.view.display_menu(controller.model.get_mode)
         choice = controller.view.get_menu_choice()
         if choice in controller.options:
             controller.options[choice]()

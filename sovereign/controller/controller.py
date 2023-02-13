@@ -5,138 +5,24 @@ import sys
 import hashlib
 import binascii
 
-#For pbkdf2
-#import hashlib
-import hmac
-import os # unused ?
+import pdb
 
 from sovereign.model.model import Model
 from sovereign.view.view import View
+from sovereign.bip39.bip39 import Bip39
 
 def check_system_compatibility():
     """Function printing python version."""
-    # Exit if the version of Python is not Python3
-    if sys.version_info[0] != 3:
-        sys.exit('\nError. Using Python' +
-                 str(sys.version_info[0]) +
-                 ': This script uses 264 bit integers and requires Python 3. Integers in Python 3 are of unlimited size. Exited from the script.\n')
-    # Exit if your machine is not little endian
-    if sys.byteorder != 'little':
-        sys.exit('\nError. This machine is ' + str(sys.byteorder) +
-                 ' endian. This software has only been tested on little endian machine.\n')
+    print("To be implemented")
 
-def binary_words_to_bip39_words(binary_words, wordlist):
-    """Function printing python version."""
-    return [wordlist[int(binary_word, 2)] for binary_word in binary_words]
-    # return [str(int(binary_word, 2)) for binary_word in binary_words]
-
-def senary_words_to_bip39_words(senary_words, wordlist):
-    """Function printing python version."""
-    return [wordlist[(int(senary_word, 6) & 0x07ff)]
-            for senary_word in senary_words]
-    # To check, the conversion is the same than %2048
-
-def is_valid_bip39_sentence(bip39_sentance, nums, wordlist, hash_method=hashlib.sha256):
-    """Function printing python version."""
-    entropy = 0
-    for word in bip39_sentance:
-        entropy = (entropy << 11) + nums[word]
-
-    if len(bip39_sentance) == 12:
-        nhex = format(entropy, '033x')
-        hash_result = hash_method(binascii.unhexlify(nhex[:-1])).hexdigest()
-        return hash_result[0] == nhex[-1]
-    elif len(bip39_sentance) == 24:
-        nhex = format(entropy, '066x')
-        hash_result = hash_method(binascii.unhexlify(nhex[:-2])).hexdigest()
-        return hash_result[1] == nhex[-1] and hash_result[0] == nhex[-2]
-    else:
-        raise ValueError("Invalid number of words")
-
-def fix_bip39_checksum(words, nums, wordlist):
-    """Function printing python version."""
-    cand = []
-    if len(words) == 24 or len(words) == 12:
-        # org_words = words
-        for i in range(2048):
-            cand = words[:-1] + [wordlist[i]]
-            if is_valid_bip39_sentence(cand, nums, wordlist):
-                return cand
-    else:
-        raise ValueError("Invalid number of words")
-
-# Compute xor of several Bip39 sentances
-# Return the xored sentance under the form of an integer
-#
-# !! before combining, we should check the checksum for each entance and trigger exception if needed
-#
-
-def bip39_sentances_xor(bip39_sentances, wordlist, nums):
-    """Function printing python version."""
-    Nxored = int(0)
-    sentance_part = []
-
-    for sentance in bip39_sentances:
-        N = 0
-        for word in sentance:
-            N = (N << 11) + nums[word]
-        Nxored = Nxored ^ N
-
-    for _ in range(0, len(sentance)):
-        j = Nxored & 0x07ff
-        Nxored = Nxored >> 11
-        sentance_part.insert(0, wordlist[j])
-
-    for i in range(2048):
-        cand = sentance_part[:-1] + [wordlist[i]]
-        if is_valid_bip39_sentence(cand, nums, wordlist):
-            print("xor result BIP39 sentance is valid")
-            return cand
-
+#def senary_words_to_bip39_words(senary_words, wordlist):
+#    """Function printing python version."""
+#    return [wordlist[(int(senary_word, 6) & 0x07ff)]
+#            for senary_word in senary_words]
+#    # To check, the conversion is the same than %2048
 
 # Mnemonic to Seed
 # test vector, see : https://bitcoin.stackexchange.com/questions/85293/how-to-use-bip39-test-vectors
-def pbkdf2(password, salt, iterations, dklen, digest):
-    """Implements the PBKDF2 key derivation function.
-
-    Args:
-        password (bytes): The password to derive the key from.
-        salt (bytes): The salt to use in the key derivation.
-        iterations (int): The number of iterations to perform.
-        dklen (int): The length of the derived key in bytes.
-        digest (callable): The hash function to use, e.g. hashlib.sha256.
-
-    Returns:
-        bytes: The derived key.
-    """
-    if dklen > (2**32 - 1) * digest().block_size:
-        raise ValueError("Requested key length too long")
-
-    password = password.encode("utf-8")
-    salt = salt.encode("utf-8")
-    
-    h = hmac.new(password, None, digest)
-
-    def xor(a, b):
-        return bytes(x ^ y for x, y in zip(a, b))
-
-    def prf(h, data):
-        hm = h.copy()
-        hm.update(data)
-        return hm.digest()
-
-    dkey = b''
-    block = 0
-    while len(dkey) < dklen:
-        block += 1
-        U = prf(h, salt + block.to_bytes(4, "big"))
-        T = U
-        for _ in range(iterations - 1):
-            U = prf(h, U)
-            T = xor(T, U)
-        dkey += T
-    return dkey[:dklen]
-
 
 class Controller:
     '''Demonstrates triple double quotes
@@ -147,8 +33,10 @@ class Controller:
         if __debug__:
             print("Controller constructor ")
         check_system_compatibility()
+
         self.model = Model()
         self.view = View()
+        self.bip39 = Bip39()
 
         self.options = {
             "0": self.option0,
@@ -163,124 +51,137 @@ class Controller:
             "21": self.option21,
         }
 
+    def bip39_sentances_xor(self, bip39_sentances):
+        """Function printing python version."""
+        sentance_xored = int(0)
+        bip39_sentance_xored = ""
+        bin_bip39_sentance_length = self.model.get_mode()*11
+
+        #compute xored BIP39 sentances value
+        for sentance in bip39_sentances:
+            int_sentance = int(0)    
+            for word in sentance.split():
+                int_sentance = (int_sentance << 11) + self.bip39.get_bip39_word_value(word)
+            bin_sentance = format(int_sentance, 'b').zfill(bin_bip39_sentance_length)
+            sentance_xored = sentance_xored ^ int(bin_sentance,2)
+            bin_sentance_xored = bin(sentance_xored)[2:].zfill(bin_bip39_sentance_length)
+
+        #Contruct BIP39 sentance from bip39 xored binary
+        for i in range (self.model.get_mode()):
+            bin_word = bin_sentance_xored[i*11:(i+1)*11]
+            bip39_sentance_xored = bip39_sentance_xored + self.bip39.get_bip39_word(int(bin_word,2)) + " "
+
+        return(self.bip39.fix_bip39_checksum(bip39_sentance_xored))
+            
+
     def option0(self):
-        """Change mode 12 or 24 BIP39 sentance."""
+        """Change BIP39 sentance length"""
         self.view.clear()
-        if self.model.get_mode() == int(24):
-            self.model.set_mode(int(12))
-        else:
-            self.model.set_mode(int(24))
+        #print(f"Supported BIP39 modes are {self.bip39.get_supported_bip39_length()} words")
+        user_input = self.view.gather_mode(self.bip39.get_supported_bip39_length())
+        #self.view.gather_mode()
+        self.model.set_mode(user_input)
+        self.view.clear()
 
     def option1(self):
         """Create BIP39 sentance from flipping a coin."""
         self.view.clear()
         print("You selected Option 1")
 
-        words = []
+        words = ""
         base = 2
-        group_count = self.model.get_mode()  # 12 or 24
         group_size = 11
 
-        while len(words) < group_count:
+        while len(words) < (self.model.get_mode() * group_size):
             user_input = self.view.gather_group_input(base, group_size)
             if user_input == 'q':
                 return
             if user_input is not None:
-                words.append(user_input)
+                words = words + user_input
             else:
                 print("Error: invalid user_input")
-            self.view.display_base2_groups(
-                words, group_count, self.model.wordlist)
+
+            bip39_words = self.bip39.binary_words_to_bip39_words(words)
+
+            self.view.display_base2_groups(bip39_words, self.bip39.get_bip39_word_value)
 
         print("Fixing the BIP39 sentance with a valid checksum")
         print("The BIP39 sentance below is valid (the checksum is correct)")
 
-        bip39_words = binary_words_to_bip39_words(words, self.model.wordlist)
-        valid_bip39_sentance = fix_bip39_checksum(
-            bip39_words, self.model.nums, self.model.wordlist)
-        self.view.display_bip39_sentance(valid_bip39_sentance, self.model.nums)
+        bip39_sentance = self.bip39.binary_words_to_bip39_words(words)
+        fixed_bip39_sentance = self.bip39.fix_bip39_checksum(bip39_sentance)
+        self.view.display_bip39_sentance(fixed_bip39_sentance, self.bip39.get_bip39_word_value)
 
     def option2(self):
-        """CCreate BIP39 sentance from rolling a dice."""
+        """Create BIP39 sentance from rolling a dice."""
         print("You selected Option 2")
-        words = []
-        base = 6
-        group_count = self.model.get_mode()
-        group_size = 5
+        words = ""
 
-        while len(words) < group_count:
-            user_input = self.view.gather_group_input(base, group_size)
+        while len(words) < self.model.get_mode() * 6 :
+            user_input = self.view.gather_6s_dice_input()
             if user_input == 'q':
                 return 'q'
             elif user_input is not None:
-                words.append(user_input)
+                words = words + user_input
             else:
                 print("Error: invalid user_input")
-            self.view.display_base6_groups(
-                words, group_count, self.model.wordlist)
+
+            #convert from base4 words to binary_words
+            bip39_sentance = self.bip39.dice_words_to_bip39_words(words)
+            self.view.display_6s_dice_groups(bip39_sentance, self.bip39.get_bip39_word_value)
+
 
         print("Fixing the BIP39 sentance...")
         print("The BIP39 sentance below is valid (the checksum is correct)")
-        bip39_words = senary_words_to_bip39_words(words, self.model.wordlist)
-        valid_bip39_sentance = fix_bip39_checksum(
-            bip39_words, self.model.nums, self.model.wordlist)
-        self.view.display_bip39_sentance(valid_bip39_sentance, self.model.nums)
+
+        fixed_bip39_sentance = self.bip39.fix_bip39_checksum(bip39_sentance)
+        self.view.display_bip39_sentance(fixed_bip39_sentance, self.bip39.get_bip39_word_value)
 
     def option3(self):
         """Create BIP39 sentance from BIP39 word random selection."""
         print("You selected Option 3")
-        words = []
-        group_count = self.model.get_mode()  # 12 or 24
+        words = ""
 
-        while len(words) < group_count:
+        while len(words.split()) < self.model.get_mode():
             word = self.view.gather_bip39_word_input(self.model.nums)
             if word == 'q':
                 return
             elif word is not None:
-                words.append(word)
+                #words.append(word)
+                words = words + ' ' + word
             else:
                 print("Error: invalid BIP39 word")
             self.view.clear()
-            self.view.display_bip39_sentance(words, self.model.nums)
+            self.view.display_bip39_sentance(words, self.bip39.get_bip39_word_value)
 
-        print(words)
-        if is_valid_bip39_sentence(
-                words,
-                self.model.nums,
-                self.model.wordlist):
+        if self.bip39.is_valid_bip39_sentence(words):
             print("The entered BIP39 sentance above is valid (checksum is correct)")
         else:
             print("The entered BIP39 sentance above is invalid (checksum is incorrect)")
             print("Fixing the BIP39 sentance...")
             print("The BIP39 sentance below is valid (the checksum is correct)")
-            valide_bip39_sentance = fix_bip39_checksum(
-                words, self.model.nums, self.model.wordlist)
-            self.view.display_bip39_sentance(
-                valide_bip39_sentance, self.model.nums)
+            valide_bip39_sentance = self.bip39.fix_bip39_checksum(words)
+            self.view.display_bip39_sentance(valide_bip39_sentance, self.bip39.get_bip39_word_value)
 
     def option4(self):
         """Load a BIP39 sentance."""
         print("You selected Option 4")
-        words = []
-        group_count = self.model.get_mode()  # 12 or 24
+        words = ""
+        group_count = self.model.get_mode()
 
-        while len(words) < group_count:
+        while len(words.split()) < group_count:
             word = self.view.gather_bip39_word_input(self.model.nums)
             if word == 'q':
                 return 'q'
             if word is not None:
-                words.append(word)
+                words = words + ' ' + word
             else:
                 print("Error: invalid BIP39 word")
             self.view.clear()
             self.view.display_bip39_sentance(words, self.model.nums)
 
         print("Checking BIP39 sentance")
-        if is_valid_bip39_sentence(
-                words,
-                self.model.nums,
-                self.model.wordlist,
-                hash_method=hashlib.sha256):
+        if self.bip39.is_valid_bip39_sentence(words):
             print("The BIP39 sentance below is valid")
             self.model.add_bip39_sentance(words)
             self.view.display_bip39_sentance(words, self.model.nums)
@@ -293,20 +194,16 @@ class Controller:
         sentances = self.model.get_bip39_sentances()
         print("Number of BIP39 sentances: " + str(len(sentances)))
         for count, sentance in enumerate(sentances):
-            self.view.display_bip39_sentance(
-                sentance, self.model.nums, "BIP39 sentance #" + str(count + 1))
+            self.view.display_bip39_sentance(sentance, self.bip39.get_bip39_word_value, "BIP39 sentance #" + str(count + 1))
 
     def option6(self):
         """Compute xor of loaded BIP39 sentances."""
         print("You selected Option 6")
-        #!!! before, we need to check that there are at least 2 BIP39_entances
-        bip39_sentance = bip39_sentances_xor(
-            self.model.bip39_sentances,
-            self.model.wordlist,
-            self.model.nums)
-        print(bip39_sentance)
+        #!!! before, we need to check that there are at least 2 BIP39 sentances
+        bip39_sentance = self.bip39_sentances_xor(
+            self.model.bip39_sentances)
         self.view.display_bip39_sentance(
-            bip39_sentance, self.model.nums, "BIP39 XORED sentance")
+            bip39_sentance, self.bip39.get_bip39_word_value, "BIP39 XORED sentance")
 
     def option20(self):
         """Load 3 12 words BIP39 sentances."""

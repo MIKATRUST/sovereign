@@ -1,25 +1,15 @@
+#!/usr/bin/env python3
 
 '''MVC/View'''
 
 from os import system, name
 from prettytable import PrettyTable
 
+import pdb
+
 def base_m_to_int(numbers, base_m):
     """Function printing python version."""
     return int(''.join([str(n) for n in numbers]), base_m)
-
-# def is_string_length_equal_to(length, string):
-#    """Function printing python version."""
-#    try:
-#        if len(string) == 0:
-#            raise ValueError("The string is empty.")
-#        elif len(string) != length:
-#            raise ValueError(
-#                "The length of the string does not match the specified value of n.")
-#        return True
-#    except ValueError as ve:
-#        print(ve)
-#        return False
 
 def base6_to_base2(numbers):
     """Function printing python version."""
@@ -29,6 +19,15 @@ def base6_to_base2(numbers):
         base2_numbers.append(binary_number)
     return base2_numbers
 
+def number_to_base(n, b):
+    """Function printing python version."""
+    if n == 0:
+        return 0
+    digits = ""
+    while n:
+        digits = digits + str(int(n % b))
+        n //= b
+    return digits[::-1]
 
 class View:
 
@@ -52,7 +51,30 @@ class View:
         """Function printing python version."""
         print("Error:", error_msg)
 
+    def gather_6s_dice_input(self) -> str:
+        """Function printing python version."""
+        group_size = 6
+        try:
+            user_input = input(
+                f"Enter 6 characters between 1 and 4, if the dice does not roll to one of this value, please roll again (q to quit): ")
+            if user_input.strip().lower() == 'q':
+                return 'q'
+            elif not user_input:
+                raise ValueError("Input cannot be empty")
+            elif len(user_input) != group_size:
+                raise ValueError(
+                    f"Input must have exactly {group_size} characters")
+            for char in user_input:
+                if int(char) > 4 or int(char) < 1:
+                    raise ValueError(
+                        f"Invalid character '{char}' entered, expected values between 1 and 4")
+            return user_input
+        except ValueError as e:
+            print(f"Error: {e}")
+            return None
+
     def gather_group_input(self, base: int, group_size: int) -> str:
+        """Function printing python version."""
         try:
             user_input = input(
                 f"Enter {group_size} characters between 0 and {base - 1} (q to quit): ")
@@ -72,32 +94,29 @@ class View:
             print(f"Error: {e}")
             return None
 
-    def display_base2_groups(self, words, group_count, word_list):
+    def display_base2_groups(self, bip39_words, get_bip39_word_value):
         """Function printing python version."""
         table = PrettyTable()
+
         table.field_names = [
             "Word",
             "Coin",
             "Int value",
-            "Int value % 2048",
             "BIP39 word"]
-        table.align["Int value % 2048"] = "r"
 
-        try:
-            for count, word in enumerate(words):
-                if group_count and count >= group_count:
-                    break
-                int_value = base_m_to_int(word, 2)
-                table.add_row([f"Word {str(count + 1).zfill(2)}",
-                               list(word),
-                               int_value,
-                               int_value % 2048,
-                               word_list[int_value % 2048]])
-            print(table.get_string(title="Coin acquisition"))
-        except Exception as e:
-            print(f"Error: {e}")
+        table.align["Word"] = "r"
 
-    def display_base6_groups(self, words, group_count, word_list):
+        for count, word in enumerate (bip39_words.split()):
+            table.add_row([f"{str(count + 1).zfill(2)}",
+                bin(get_bip39_word_value(word))[2:].zfill(11),
+                get_bip39_word_value(word),
+                word])
+
+        #pdb.set_trace()
+
+        print(table.get_string(title="Coin acquisition"))
+    
+    def display_6s_dice_groups(self, bip39_words, get_bip39_word_value):
         """Function printing python version."""
         table = PrettyTable()
         table.field_names = [
@@ -108,23 +127,21 @@ class View:
             "BIP39 word"]
         table.align["Int value % 2048"] = "r"
 
-        try:
-            for count, word in enumerate(words):
-                if group_count and count >= group_count:
-                    break
-                int_value = base_m_to_int(word, 6)
-                table.add_row([f"Word {str(count + 1).zfill(2)}",
-                               list(word),
-                               int_value,
-                               int_value % 2048,
-                               word_list[int_value % 2048]])
-                print(table.get_string(title="Dice acquisition"))
-        except Exception as e:
-            print(f"Error: {e}")
+        #pdb.set_trace()
+            
+        for count, word in enumerate (bip39_words.split()):
+            #pdb.set_trace()
+            table.add_row([f"{str(count + 1).zfill(2)}",
+                str(number_to_base(get_bip39_word_value(word), 4)).zfill(6).replace("0", "4"),
+                bin(get_bip39_word_value(word))[2:].zfill(11),
+                get_bip39_word_value(word),
+                word])
+
+        print(table.get_string(title="Dice acquisition"))
+
 
     def gather_bip39_word_input(self, nums) -> str:
         """Function printing python version."""
-        print("!!!! within gather_bip39_word_input")
         try:
             user_input = input(f"Enter BIP39 word (q to quit): ")
             if user_input.strip().lower() == 'q':
@@ -137,14 +154,26 @@ class View:
             print(f"Error, not a BIP39 dictionnary word: {e}")
             return None
 
-    def display_bip39_sentance(self, words, nums, title=None):
+    def gather_mode(self, supported_modes) -> str:
+        """Function printing python version."""
+        print(f"Supported BIP39 modes are {supported_modes} words")
+        while True:
+            user_input = input(f"Enter expected mode: ")
+            if (str(user_input) in str(supported_modes)):
+                break
+            else:
+                print ('Value not supported')         
+        return user_input
+
+    def display_bip39_sentance(self, words, get_bip39_word_value, title=None):
         """Function printing python version."""
         table = PrettyTable()
         table.field_names = ["Word", "BIP39 word", "Int value"]
+
         try:
-            for count, word in enumerate(words):
+            for count, word in enumerate(words.split()):
                 table.add_row(
-                    [f"Word {str(count + 1).zfill(2)}", word, nums[word]])
+                    [f"{str(count + 1).zfill(2)}", word, get_bip39_word_value(word)])
             if title is not None:
                 print(table.get_string(title=title))
             else:
@@ -152,16 +181,16 @@ class View:
         except Exception as e:
             print(f"Error: {e}")
 
-    def display_menu(self, mode):
+    def display_menu(self, get_mode):
         """Function printing python version."""
         # clear()
         print("Menu:")
-        print("Mode is " + str(mode) + " words BIP39 sentance")
+        print(f"Mode is {get_mode()} words BIP39 sentance")
         print("   0. Toggle mode")
         print("Physical entropy generation, create and fix BIP39 sentance")
         print("   1. Create BIP39 sentance from flipping a coin")
         print("   2. Create BIP39 sentance from rolling a dice")
-        print("   3. Create BIP39 sentance from random selection of BIP39 words, fix checksum")
+        print("   3. Create BIP39 sentance from random manual selection of BIP39 words, fix checksum")
         print("Combine BIP39 sentances")
         print("   4. Load BIP39 sentance")
         print("   5. Show loaded BIP39 sentance(s)")

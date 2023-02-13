@@ -32,7 +32,7 @@ test: $(VENV)
 #	$(BIN)/pytest
 	$(BIN)/coverage run -m unittest discover
 	$(BIN)/coverage report
-	$(BIN)/coverage html -d ./docs/
+	$(BIN)/coverage html -d ./sovereign/docs/
 
 .PHONY: coverage
 coverage: $(VENV)
