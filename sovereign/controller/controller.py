@@ -78,7 +78,7 @@ class Controller:
         """Change BIP39 sentance length"""
         self.view.clear()
         #print(f"Supported BIP39 modes are {self.bip39.get_supported_bip39_length()} words")
-        user_input = self.view.gather_mode(self.bip39.get_supported_bip39_length())
+        user_input = self.view.gather_mode(self.bip39.get_supported_mnem_lengths())
         #self.view.gather_mode()
         self.model.set_mode(user_input)
         self.view.clear()
@@ -101,16 +101,16 @@ class Controller:
             else:
                 print("Error: invalid user_input")
 
-            bip39_words = self.bip39.binary_words_to_bip39_words(words)
+            bip39_words = self.bip39.binary_words_to_bip39_phrase(words)
 
-            self.view.display_base2_groups(bip39_words, self.bip39.get_bip39_word_value)
+            self.view.display_base2_groups(bip39_words, self.bip39.get_word_index)
 
         print("Fixing the BIP39 sentance with a valid checksum")
         print("The BIP39 sentance below is valid (the checksum is correct)")
 
-        bip39_sentance = self.bip39.binary_words_to_bip39_words(words)
+        bip39_sentance = self.bip39.binary_words_to_bip39_phrase(words)
         fixed_bip39_sentance = self.bip39.fix_bip39_checksum(bip39_sentance)
-        self.view.display_bip39_sentance(fixed_bip39_sentance, self.bip39.get_bip39_word_value)
+        self.view.display_bip39_sentance(fixed_bip39_sentance, self.bip39.get_word_index)
 
     def option2(self):
         """Create BIP39 sentance from rolling a dice."""
@@ -127,7 +127,7 @@ class Controller:
                 print("Error: invalid user_input")
 
             #convert from base4 words to binary_words
-            bip39_sentance = self.bip39.dice_words_to_bip39_words(words)
+            bip39_sentance = self.bip39.dice_to_bip39_phrase(words)
             self.view.display_6s_dice_groups(bip39_sentance, self.bip39.get_bip39_word_value)
 
 

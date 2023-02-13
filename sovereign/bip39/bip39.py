@@ -34,47 +34,58 @@ class Bip39():
         with open(file_path, encoding="utf-8") as f:
             return [word.strip() for word in f]
 
-    def get_bip39_word(self, int_value):
-        """Get the BIP39 word from the integer value."""
-        return self.wordlist[int_value]
+    def get_word(self, index: int) -> str:
+        """Get the BIP39 word from index value."""
+        return self.wordlist[index]
 
-    def get_bip39_word_value(self, word):
-        """Get the integer value for the given BIP39 word."""
+    def get_word_index(self, word: str) -> int:
+        """Get the index from the BIP39 word."""
         return self.word_to_index[word]
 
-    def get_supported_bip39_length(self):
-        """Get the supported modes, i.e BIP39 supoported word length for this module."""
+    def is_valid_words(self, sentance: str) -> bool:
+        """Check if word(s) are valid BIP39 word(s).""" 
+        words = sentance.split()
+        return all(word in self.wordlist for word in words)
+
+    def get_supported_mnem_lengths(self) -> list:
+        """Get the supported modes, i.e BIP39 supoported mnemonic lengths."""
         return self.SUPPORTED_PHRASE_LENGTHS
 
-    def is_valid_bip39_words(self, sentance):
-        """Check if all words of a BIP39 sequence are valid."""
-        return not any(word not in self.word_to_index for word in sentance.split())
-    
-    def has_valid_bip39_length(self, mnemonic: str) -> bool:
-        """Check if a BIP mnemonic has a valid length."""
+    def is_supported_mnem_length(self, mnemonic: str) -> bool:
+        """Check if a mnemonic is supported."""
         words = mnemonic.split()
         return len(words) in self.SUPPORTED_PHRASE_LENGTHS
     
-    def binary_words_to_bip39_words(self, words):
-        """Convert a binary sequence of words into a BIP39 sentance."""
-        sentance = ""
-        for i in range (int(len(words)/11)):
-            bin_word = words[i*11:(i+1)*11]
-            sentance = sentance + self.get_bip39_word(int(bin_word,2)) + " "
-        return sentance[:-1]
+    def binary_words_to_bip39_phrase(self, binary_words: str) -> str:
+        """Convert a binary sequence into a BIP39 phrase.
+        Args:
+            binary_words (str): Binary sequence to convert.
 
-    def dice_words_to_bip39_words(self, dice_words):
-        """Convert a dice sequence of words [1-4] into a BIP39 sentance."""
-        sentance = ""
-        for i in range (int(len(dice_words)/6)):
-            dice_word = dice_words[i*6:(i+1)*6]
-            #transform word dice base to base 4  
-            dice_word = dice_word.replace('4', '0')
-            #pdb.set_trace()
+        Returns:
+            str: BIP39 phrase.
+        """
+        phrase = ""
+        for i in range (int(len(binary_words)/11)):
+            binary_word = binary_words[i*11:(i+1)*11]
+            phrase += self.get_word(int(binary_word,2)) + " "
+        return phrase.strip()
+
+    def dice_to_bip39_phrase(self, dice_words: str) -> str:
+        """Convert a dice sequence [1-4] into a BIP39 phrase.
+           To keep uniform probability and simplify process auditing, 
+           this function use number from 1 to 4.
+        Args:
+            dice_words (str): Dice sequence to convert.
+
+        Returns:
+            str: BIP39 phrase.
+        """
+        phrase = ""
+        for i in range (int(len(dice_words) / 6)):
+            dice_word = dice_words[i*6:(i+1)*6].replace('4', '0')
             #6 dice rolls (12 bits), maximum value = 4095, need to get back to 11 bits
-            sentance = sentance + self.get_bip39_word(int(dice_word,4) % 2048) + " "
-            #pdb.set_trace()
-        return sentance[:-1]
+            phrase += self.get_word(int(dice_word, 4) % 2048) + " "
+        return phrase.strip()
 
     def is_valid_bip39_sentence(self, bip39_sentance, hash_method=hashlib.sha256):
         """Return true if the BIP39 sentance is valid,i.e. the checksum is valid."""
