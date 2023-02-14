@@ -140,15 +140,17 @@ class View:
         print(table.get_string(title="Dice acquisition"))
 
 
-    def gather_bip39_word_input(self, nums) -> str:
+    def gather_bip39_word_input(self, is_valid_words) -> str:
         """Function printing python version."""
         try:
             user_input = input(f"Enter BIP39 word (q to quit): ")
+            #pdb.set_trace()
             if user_input.strip().lower() == 'q':
                 return 'q'
             elif not user_input:
                 raise ValueError("Input cannot be empty")
-            elif user_input.strip().lower() in nums:
+            #TBD : bug belo,always true
+            elif is_valid_words(user_input.strip().lower()):
                 return user_input.strip().lower()
         except ValueError as e:
             print(f"Error, not a BIP39 dictionnary word: {e}")

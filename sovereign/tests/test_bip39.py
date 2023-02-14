@@ -24,7 +24,7 @@ class TestBip39(unittest.TestCase):
         self.assertEqual(fun(int(190)), 'blind')
         self.assertEqual(fun(int(2047)), 'zoo')
     
-    def test_word_index(self):
+    def test_get_word_index(self):
         """Function printing python version."""
         bip39 = Bip39()
         fun = bip39.get_word_index
