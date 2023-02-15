@@ -1,9 +1,9 @@
 # sovereign
-In the era of the information age, digital wallets will play a crucial role in society.
+In the era of the information age, digital wallets will play a crucial role in society. At the base of digital wallet is entropy. sovereign aim is to help generate entropy from physical means.
 
 ## About sovereign?
 * Sovereign is a Python-based software that generates BIP39 sentences through coin flipping, dice rolling, or manual random selection of BIP39 words.
-* Sovereign is not (yet) a digital wallet
+* Sovereign is not a digital wallet
 
 
 ## Run
